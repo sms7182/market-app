@@ -5,29 +5,38 @@ const config = {
     user: 'sa',
     password: 'sa123',
     server: 'localhost', // You can use 'localhost\\instance' to connect to named instance
-    database: '',
+    database: 'Implementation3ERPDB',
  
     options: {
         encrypt: true // Use this if you're on Windows Azure
     }
 }
-app.get('/',(req,res)=>{
-    
-async () => {
-    try {
-        let pool = await sql.connect(config)
-        console.log('connected');
-        let result1 = await pool.request().query('select * from gnr.EnterpriseSubject')
-       res.send(result1);
-    } catch (err) {
-        console.log(err);
-        sql.close();
-    }
-}  
+app.get('/', function (req, res) {
+   
+    console.log('connecting');
+   
 
- 
-    sql.close();
     
+    sql.connect(config, function (err) {
+    
+        if (err) {
+            
+           return console.log('unable connect to server'+err);
+        }
+
+        // create Request object
+        var request = new sql.Request();
+           
+        // query to the database and get the records
+        request.query('select * from gnr.enterprisesubject', function (err, recordset) {
+            
+            if (err) console.log(err)
+
+            // send records as a response
+            res.send(recordset);
+            
+        });
+    });
 });
 
 var server=app.listen(7070,()=>{
