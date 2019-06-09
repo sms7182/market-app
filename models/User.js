@@ -1,8 +1,37 @@
-'use strict'
-module.exports=(sequelize,DataTypes)=>{
-    var User=sequelize.define('User',{
-        userName:DataTypes.STRING,
-        mobile:DataTypes.STRING
+'use strict';
+module.exports = {
+  up: (queryInterface, Sequelize) => {
+      console.log('start create table')
+    return queryInterface.createTable('Users', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      name: {
+        type: Sequelize.STRING
+      },
+      surname: {
+        type: Sequelize.STRING
+      },
+      email: {
+        type: Sequelize.STRING
+      },
+      password: {
+        type: Sequelize.STRING
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      }
     });
-    return User;
-}
+  },
+  down: (queryInterface, Sequelize) => {
+    return queryInterface.dropTable('Users');
+  }
+};
