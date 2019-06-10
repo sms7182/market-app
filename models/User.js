@@ -1,37 +1,25 @@
 'use strict';
-module.exports = {
-  up: (queryInterface, Sequelize) => {
-      console.log('start create table')
-    return queryInterface.createTable('Users', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      name: {
-        type: Sequelize.STRING
-      },
-      surname: {
-        type: Sequelize.STRING
-      },
-      email: {
-        type: Sequelize.STRING
-      },
-      password: {
-        type: Sequelize.STRING
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
-    });
-  },
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Users');
-  }
-};
+var Sequelize=require('sequelize');
+var sequelize=new Sequelize('TestDB','sa','sa123',{
+  host:'localhost',
+  dialect:'mssql'
+})
+
+module.exports=function(){
+  var User= sequelize.define('user',{username: Sequelize.STRING});
+  
+sequelize.sync().then(function() {
+  return User.create({
+    username:'sdd',
+ 
+  });
+}).then(function(jane) {
+  console.log(jane.get({
+    plain: true
+  }));
+});
+User.AddU=function(idd){
+ User.id=idd;
+}
+  return User;
+}
