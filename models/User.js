@@ -1,25 +1,10 @@
 'use strict';
-var Sequelize=require('sequelize');
-var sequelize=new Sequelize('TestDB','sa','sa123',{
-  host:'localhost',
-  dialect:'mssql'
+let mongoose=require('mongoose');
+var Schema=mongoose.Schema;
+var 
+const User=new Schema({
+  password:String,
+  creationdate:Date,
+  mobile:String,
+  email:String
 })
-
-module.exports=function(){
-  var User= sequelize.define('user',{username: Sequelize.STRING});
-  
-sequelize.sync().then(function() {
-  return User.create({
-    username:'sdd',
- 
-  });
-}).then(function(jane) {
-  console.log(jane.get({
-    plain: true
-  }));
-});
-User.AddU=function(idd){
- User.id=idd;
-}
-  return User;
-}
