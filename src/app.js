@@ -30,12 +30,10 @@ mongoose.connect(mongoDbUrl).then((db)=>{
     console.log('mongo connected');
 }).catch(err=>console.log(err));
 
-app.get('',(req,res)=>{
-   res.render('index',{
-       title:'hi moji',
-       name:'mj'
-   })
-   
+
+app.post('/users',(req,res)=>{
+    console.log(req.body);
+    res.send(req.body);
 })
 
 app.listen(port,()=>{
