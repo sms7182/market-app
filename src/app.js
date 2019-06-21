@@ -30,6 +30,13 @@ mongoose.connect(mongoDbUrl).then((db)=>{
     console.log('mongo connected');
 }).catch(err=>console.log(err));
 
+app.get('',(req,res)=>{
+   res.render('index',{
+       title:'market',
+       name:'mojtaba'
+   })
+})
+
 
 app.post('/users',(req,res)=>{
     console.log(req.body);
