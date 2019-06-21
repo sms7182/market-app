@@ -2,6 +2,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const URLSlug = require('mongoose-url-slugs');
+require('mongoose-double')(mongoose);
+
+var SchemaTypes = mongoose.Schema.Types;
 
 const InvoiceSchema = new Schema({
     user: {
@@ -17,7 +20,7 @@ const InvoiceSchema = new Schema({
     },
     code: {
         type: String,
-        required: true
+        required: false
     },
     status: {
         type: String,
@@ -45,18 +48,18 @@ const InvoiceSchema = new Schema({
     },
     invoiceLines: [{
         rowOrder: {
-            type: Int32Array
+            type: Number
         },
         code: {
             type: String,
-            required: true
+            required: false
         },
         title: {
             type: String,
-            required: true
+            required: false
         },
         quantity: {
-            type: Int32Array
+            type: SchemaTypes.Double
         },
         price: {
             type: SchemaTypes.Double

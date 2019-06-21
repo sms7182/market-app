@@ -16,7 +16,10 @@
     "hbs": "^4.0.4",
     "mongodb": "^3.2.7",
     "mongoose": "^5.6.0",
+    "mongoose-double": "0.0.1",
+    "mongoose-url-slugs": "^1.0.2",
     "mssql": "^5.1.0",
+    "passport": "^0.4.0",
     "sequelize": "^5.8.7",
     "sequelize-cli": "^5.4.0",
     "tedious": "^6.1.2"
