@@ -4,6 +4,8 @@ const mongoose=require('mongoose');
 const exphbs = require('express-handlebars');
 const bodyParser=require('body-parser');
 const app=express();
+const Upload=require('express-fileupload');
+const methodOverride=require('method-override');
 const publicdirectory=path.join(__dirname,'../public');
 const viewpath=path.join(__dirname,'../templates/views');
 const partialspath=path.join(__dirname,'../templates/partials')
@@ -19,6 +21,23 @@ const port=process.env.Port || 7575;
 app.set('view engine','hbs');
 app.set('views',viewpath);
 hbs.registerPartials(partialspath);
+
+//mildeware upload
+app.use(Upload());
+
+//body parser
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
+
+//override method
+app.use(methodOverride('_method'))
+
+app.use(session({
+   secret:'fatalerror',
+   resave:true,
+   saveUninitialized:true
+}));
+
 
 
 //#region bodyparser
@@ -62,18 +81,11 @@ app.post('/users',(req,res)=>{
     res.send(req.body);
 })
 
-app.post('/invoice',(req,res)=>{
-    if(req.body){
-            var invoice=new Invoice();
-            invoice.code=req.body.code;
-            console.log(req.body);
-            invoice.save().then(()=>{
-                console.log('invoice saved');
-            }).catch(err=>{
-                res.send(err);
-            })
-    }
-})
+const invoices=require('../routes/home/invoices');
+
+
+app.use('/invoice',invoices);
+
 
 app.listen(port,()=>{
     console.log('Server is running on 7575');
