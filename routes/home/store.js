@@ -1,23 +1,24 @@
 const express=require('express');
 const app=express();
 const router=express.Router();
-const Invoice=require('../../models/Invoice');
+const Store=require('../../models/Store');
 
 router.all('/*',(req,res,next)=>{
-    req.app.locals.layout='invoice';
+    req.app.locals.layout='store';
     next();
-})
+});
 
 
 router.post('/',(req,res)=>{
     console.log(req.body);
     if(req.body){
-            var invoice=new Invoice();
-            invoice.slug=req.body.code;
-            invoice.store=req.body.store.id;
+            var store=new Store();
+            store.name=req.body.name;
+            store.address=req.body.address;
+            store.date=req.body.date;
             console.log(req.body);
-            invoice.save().then(()=>{
-                console.log('invoice saved');
+            store.save().then(()=>{
+                console.log('store saved');
             }).catch(err=>{
                 res.send(err);
             })

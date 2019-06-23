@@ -82,10 +82,14 @@ app.post('/users',(req,res)=>{
 })
 
 const invoices=require('../routes/home/invoices');
-
+const stores=require('../routes/home/store');
+const banks=require('../routes/home/bank');
+const userinfos=require('../routes/home/userinfo');
 
 app.use('/invoice',invoices);
-
+app.use('/store',stores);
+app.use('/bank',banks);
+app.use('/userinfo',userinfos);
 
 app.listen(port,()=>{
     console.log('Server is running on 7575');

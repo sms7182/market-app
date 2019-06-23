@@ -1,23 +1,26 @@
 const express=require('express');
 const app=express();
 const router=express.Router();
-const Invoice=require('../../models/Invoice');
+const Bank=require('../../models/Bank');
 
 router.all('/*',(req,res,next)=>{
-    req.app.locals.layout='invoice';
+    req.app.locals.layout='bank';
     next();
-})
+});
 
 
 router.post('/',(req,res)=>{
     console.log(req.body);
     if(req.body){
-            var invoice=new Invoice();
-            invoice.slug=req.body.code;
-            invoice.store=req.body.store.id;
+            var bank=new Bank();
+            bank.name=req.body.name;
+            bank.address=req.body.address;
+            //icon
+            bank.date=req.body.date;
+           
             console.log(req.body);
-            invoice.save().then(()=>{
-                console.log('invoice saved');
+            bank.save().then(()=>{
+                console.log('userinfo saved');
             }).catch(err=>{
                 res.send(err);
             })
