@@ -47,47 +47,13 @@ const InvoiceSchema = new Schema({
         default: Date.now()
     },
     invoiceLines: [{
-        rowOrder: {
-            type: Number
-        },
-        code: {
-            type: String,
-            required: false
-        },
-        title: {
-            type: String,
-            required: false
-        },
-        quantity: {
-            type: SchemaTypes.Double
-        },
-        price: {
-            type: SchemaTypes.Double
-        },
-        totalPrice: {
-            type: SchemaTypes.Double,
-            default: 0
-        },
-        netPrice: {
-            type: SchemaTypes.Double,
-            default: 0
-        },
-        decPrice: {
-            type: SchemaTypes.Double,
-            default: 0
-        },
-        incPrice: {
-            type: SchemaTypes.Double,
-            default: 0
-        },
-        date: {
-            type: Date,
-            default: Date.now()
-        }
-
+        type: Schema.Types.ObjectId,
+        ref: 'invoiceLines'
     }]
-
 });
 
 InvoiceSchema.plugin(URLSlug('code',{field:'slug'}));
 module.exports = mongoose.model('invoices', InvoiceSchema);
+
+
+
