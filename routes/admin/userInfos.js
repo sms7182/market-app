@@ -1,0 +1,74 @@
+const express = require('express');
+const router = express.Router();
+const Bank = require('../../models/Bank');
+const {userAuthenticated} = require('../../helpers/authentication');
+
+router.all('/*',userAuthenticated ,(req, res, next) => {
+    req.app.locals.layout = 'admin';
+    next();
+});
+
+router.get('/', (req, res) => {
+    UserInfo.find({}).then(users => {
+
+        res.render('admin/users', {users: users});
+
+    })
+});
+
+
+router.post('/create', (req, res) => {
+    // res.send('It works...')
+
+    let errors = [];
+    if(!req.body.name){
+        errors.push({message: 'please add a Title'});
+    }
+
+    if(errors.length>0)
+    {
+        res.render('admin/users/create',{errors:errors});
+    }else {
+        let newUser = new UserInfo({
+            userName: req.body.user,
+            address: req.address
+        });
+
+        newBank.save().then(savedBank => {
+            req.flash('success_message',`${savedBank.name} was Created Successfully`);
+            res.redirect('/admin/banks')
+        }).catch(validator => {
+            res.render('admin/banks/create',{errors:validator.errors});
+            // console.log(`COULD NOT SAVE POST BECAUSE: ${validator}`);
+        });
+    }
+});
+
+router.get('/edit/:id',(req,res)=>{
+    //res.send('It Works');
+    Bank.findOne({_id:req.params.id}).then(bank=>{
+        res.render('admin/banks/edit',{bank:bank});
+    });
+
+});
+
+router.put('/edit/:id',(req,res)=>{
+    Bank.findById(req.params.id).then(bank=>{
+        bank.name=req.body.name;
+        bank.address=req.address;
+        bank.isActive=req.isActive;
+        bank.save().then(updatedBank=>{
+            req.flash('success_message',`${updatedBank.name} was Updated Successfully`);
+            res.redirect('/admin/banks');
+        }).catch(err => res.status(400).send(`COULD NOT SAVE BECAUSE: ${err}`));
+    })
+});
+
+router.delete('/:id', (req, res) => {
+    Bank.findByIdAndDelete(req.params.id).then(deletedBank => {
+        req.flash('success_message',`${deletedBank.name} was Deleted Successfully`);
+        res.redirect('/admin/banks');
+    }).catch(err => res.status(400).send(`COULD NOT DELETE BANK BECAUSE: ${err}`));
+});
+
+module.exports = router;

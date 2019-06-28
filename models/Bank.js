@@ -10,6 +10,10 @@ const BankSchema = new Schema({
     type: String,
     required: true
   },
+  isActive: {
+    type: Boolean,
+    default: true
+  },
   icon:{
     type: String
   },

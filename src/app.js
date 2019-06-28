@@ -6,7 +6,7 @@ const bodyParser=require('body-parser');
 const app=express();
 const publicdirectory=path.join(__dirname,'../public');
 const viewpath=path.join(__dirname,'../templates/views');
-const partialspath=path.join(__dirname,'../templates/partials')
+const partialspath=path.join(__dirname,'../templates/partials');
 const hbs=require('hbs');
 const session=require('express-session');
 const flash=require('connect-flash');
@@ -36,8 +36,8 @@ app.get('',(req,res)=>{
        name:'mj'
    })
    
-})
+});
 
 app.listen(port,()=>{
     console.log('Server is running on 7575');
-})
+});
