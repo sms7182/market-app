@@ -1,5 +1,10 @@
 const request = require('supertest');
 const app = require('../src/appCreate');
+const User = require('../models/UserInfo');
+
+beforeEach(async ()=>{
+    await User.deleteMany();
+});
 
 test('Should signup a new User',async ()=>{
     await request(app).post('/userInfos/register').send({
