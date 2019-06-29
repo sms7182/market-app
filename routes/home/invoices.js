@@ -11,7 +11,9 @@ router.all('/*',(req,res,next)=>{
 })
 
 
-router.post('/',(req,res)=>{
+
+
+router.post('/create',(req,res)=>{
    
     //console.log(req);
     //console.log(mongoose.Types.ObjectId.isValid('53cb6b9b4f4ddef1ad47f943'));
@@ -55,6 +57,18 @@ router.post('/',(req,res)=>{
                 res.send(err);
             })
     }
+    res.send('invoice saved')
 })
+
+router.get('/edit',(req,res)=>{
+    
+    Invoice.findOne({_id:req.params.id}).then(inv=>{
+   
+      res.send(inv);
+   }).catch(err=>{
+       
+       res.render('Error  '+err);
+   })
+});
 
 module.exports = router;
