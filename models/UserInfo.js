@@ -31,7 +31,7 @@ const UserInfoSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'banks'
     },
-    accountInfo:{
+    accountNumber:{
       type: String,
       required: true
     }

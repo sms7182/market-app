@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const Bank = require('../../models/Bank');
-const {userAuthenticated} = require('../../helpers/authentication');
+const UserInfo = require('../../models/UserInfo');
+const bcryptjs = require('bcryptjs');
 
-router.all('/*',userAuthenticated ,(req, res, next) => {
-    req.app.locals.layout = 'admin';
-    next();
-});
+const {userAuthenticated} = require('../../helpers/authentication');
+//
+// router.all('/*',userAuthenticated ,(req, res, next) => {
+//     req.app.locals.layout = 'admin';
+//     next();
+// });
 
 router.get('/', (req, res) => {
     UserInfo.find({}).then(users => {
@@ -17,58 +19,121 @@ router.get('/', (req, res) => {
 });
 
 
-router.post('/create', (req, res) => {
-    // res.send('It works...')
+router.post('/register', (req, res) => {
 
     let errors = [];
-    if(!req.body.name){
-        errors.push({message: 'please add a Title'});
+    if (!req.body.firstName) {
+        errors.push({message: 'please add a FirstName'});
     }
 
-    if(errors.length>0)
-    {
-        res.render('admin/users/create',{errors:errors});
-    }else {
-        let newUser = new UserInfo({
-            userName: req.body.user,
-            address: req.address
+    if (!req.body.lastName) {
+        errors.push({message: 'please add a LastName'});
+    }
+
+    if (!req.body.email) {
+        errors.push({message: 'please add an EMail'});
+    }
+
+    if (!req.body.password) {
+        errors.push({message: 'please enter a Password'});
+    }
+
+    if (!req.body.passwordConfirm) {
+        errors.push({message: 'Confirm Password can not be empty'});
+    }
+
+    if (req.body.password !== req.body.passwordConfirm) {
+        errors.push({message: 'Password fields do not match'});
+    }
+
+    if (errors.length > 0) {
+        res.render('home/register', {
+            errors: errors,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email
+        });
+    } else {
+        User.findOne({email: req.body.email}).then(findUser => {
+
+
+            if (!findUser) {
+                let newUser = new UserInfo({
+                    firstName: req.body.firstName,
+                    lastName: req.body.lastName,
+                    email: req.body.email,
+                    password: req.body.password,
+                    nationalityCode: req.body.nationalityCode,
+                    phoneNumber:req.body.phoneNumber
+                });
+
+                if(req.body.bankHistories)
+                {
+                    for(var i=0;i<req.body.bankHistories.length;i++)
+                    {
+                        let bankHistory=req.body.bankHistories[i];
+                        newUser.bankHistories.push({
+                            bank: bankHistory.bank,
+                            accountNumber:bankHistory.accountNumber
+                        });
+                    }
+                }
+
+                bcryptjs.genSalt(10, (err, salt) => {
+                    bcryptjs.hash(newUser.password, salt, (err, hash) => {
+
+                        newUser.password = hash;
+
+                        newUser.save().then(savedUser => {
+
+                            res.status(201).send({savedUser});
+
+                            // req.flash('success_message', `${savedUser.email} was Registered Successfully, You Can Login NOW.`);
+                            // res.redirect('/login');
+                        }).catch(err => res.status(400).send(`COULD NOT Create User BECAUSE: ${err}`));
+                    });
+                });
+            } else {
+                res.status(400).send(`${findUser.email} already Exists, You Can Login NOW.`);
+
+                // req.flash('error_message', `${findUser.email} already Exists, You Can Login NOW.`);
+                // res.redirect('/login');
+                // res.render('home/register', {errors: errors,
+                //     firstName: req.body.firstName,
+                //     lastName: req.body.lastName,
+                //     email: req.body.email
+                // });
+            }
         });
 
-        newBank.save().then(savedBank => {
-            req.flash('success_message',`${savedBank.name} was Created Successfully`);
-            res.redirect('/admin/banks')
-        }).catch(validator => {
-            res.render('admin/banks/create',{errors:validator.errors});
-            // console.log(`COULD NOT SAVE POST BECAUSE: ${validator}`);
-        });
     }
 });
-
-router.get('/edit/:id',(req,res)=>{
-    //res.send('It Works');
-    Bank.findOne({_id:req.params.id}).then(bank=>{
-        res.render('admin/banks/edit',{bank:bank});
-    });
-
-});
-
-router.put('/edit/:id',(req,res)=>{
-    Bank.findById(req.params.id).then(bank=>{
-        bank.name=req.body.name;
-        bank.address=req.address;
-        bank.isActive=req.isActive;
-        bank.save().then(updatedBank=>{
-            req.flash('success_message',`${updatedBank.name} was Updated Successfully`);
-            res.redirect('/admin/banks');
-        }).catch(err => res.status(400).send(`COULD NOT SAVE BECAUSE: ${err}`));
-    })
-});
-
-router.delete('/:id', (req, res) => {
-    Bank.findByIdAndDelete(req.params.id).then(deletedBank => {
-        req.flash('success_message',`${deletedBank.name} was Deleted Successfully`);
-        res.redirect('/admin/banks');
-    }).catch(err => res.status(400).send(`COULD NOT DELETE BANK BECAUSE: ${err}`));
-});
+//
+// router.get('/edit/:id',(req,res)=>{
+//     //res.send('It Works');
+//     User.findOne({_id:req.params.id}).then(user=>{
+//         res.render('admin/users/edit',{userInfo:user});
+//     });
+//
+// });
+//
+// router.put('/edit/:id',(req,res)=>{
+//     Bank.findById(req.params.id).then(bank=>{
+//         bank.name=req.body.name;
+//         bank.address=req.address;
+//         bank.isActive=req.isActive;
+//         bank.save().then(updatedBank=>{
+//             req.flash('success_message',`${updatedBank.name} was Updated Successfully`);
+//             res.redirect('/admin/banks');
+//         }).catch(err => res.status(400).send(`COULD NOT SAVE BECAUSE: ${err}`));
+//     })
+// });
+//
+// router.delete('/:id', (req, res) => {
+//     Bank.findByIdAndDelete(req.params.id).then(deletedBank => {
+//         req.flash('success_message',`${deletedBank.name} was Deleted Successfully`);
+//         res.redirect('/admin/banks');
+//     }).catch(err => res.status(400).send(`COULD NOT DELETE BANK BECAUSE: ${err}`));
+// });
 
 module.exports = router;

@@ -1,0 +1,48 @@
+<div class="row">
+    <h1>Create Store</h1>
+    <div class="col-sm-4">
+        <form action="/admin/stores/create" method="post">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" name="name" placeholder="Enter Title" class="form-control">
+            </div>
+            <button class="btn btn-primary">Create Store</button>
+        </form>
+    </div>
+</div>
+
+<br>
+<hr>
+
+<div class="row">
+
+    <div class="col-sm-8">
+        <h1>Stores</h1>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>Name</th>
+                <th>Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each stores}}
+
+                <tr>
+                    <th>{{id}}</th>
+                    <th>{{name}}</th>
+                    <th>{{generateDate date 'MMMM DD'}}</th>
+                    <td><a href="/admin/stores/edit/{{id}}" class="btn btn-info">Edit</a></td>
+                    <td>
+                        <form action="/admin/stores/{{id}}?_method=DELETE" method="post">
+                            <button type="submit" class="btn btn-danger">DELETE</button>
+                        </form>
+                    </td>
+                </tr>
+
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -14,7 +14,7 @@ const StoreSchema = new Schema({
     bank: {
       type: Schema.Types.ObjectId,
       ref: 'banks',
-      required: true
+      required: false
     },
       accountNumber:{
         type: String,
@@ -51,7 +51,7 @@ const StoreSchema = new Schema({
   }],
   password:{
     type: String,
-    required: true
+    required: false
   },
     isActive: {
         type: Boolean,

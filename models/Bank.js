@@ -8,7 +8,7 @@ const BankSchema = new Schema({
   },
   address:{
     type: String,
-    required: true
+    required: false
   },
   isActive: {
     type: Boolean,

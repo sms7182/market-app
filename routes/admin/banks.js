@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const Bank = require('../../models/Bank');
 const {userAuthenticated} = require('../../helpers/authentication');
-
-router.all('/*',userAuthenticated ,(req, res, next) => {
-    req.app.locals.layout = 'admin';
-    next();
-});
+//
+// router.all('/*',userAuthenticated ,(req, res, next) => {
+//     req.app.locals.layout = 'admin';
+//     next();
+// });
 
 router.get('/', (req, res) => {
     Bank.find({}).then(banks => {
@@ -19,7 +19,7 @@ router.get('/', (req, res) => {
 
 router.post('/create', (req, res) => {
     // res.send('It works...')
-
+console.log(`Bank Router (${req}) ${req.body}`);
     let errors = [];
     if(!req.body.name){
         errors.push({message: 'please add a Title'});
@@ -35,11 +35,12 @@ router.post('/create', (req, res) => {
         });
 
         newBank.save().then(savedBank => {
-            req.flash('success_message',`${savedBank.name} was Created Successfully`);
-            res.redirect('/admin/banks')
+            res.status(201).send({savedBank});
+            // req.flash('success_message',`${savedBank.name} was Created Successfully`);
+            // res.redirect('/admin/banks')
         }).catch(validator => {
-            res.render('admin/banks/create',{errors:validator.errors});
-            // console.log(`COULD NOT SAVE POST BECAUSE: ${validator}`);
+            res.status(400).send();
+            // res.render('admin/banks/create',{errors:validator.errors});
         });
     }
 });

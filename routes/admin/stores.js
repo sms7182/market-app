@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const Store = require('../../models/Store');
 const {userAuthenticated} = require('../../helpers/authentication');
-
-router.all('/*',userAuthenticated ,(req, res, next) => {
-    req.app.locals.layout = 'admin';
-    next();
-});
+//
+// router.all('/*',userAuthenticated ,(req, res, next) => {
+//     req.app.locals.layout = 'admin';
+//     next();
+// });
 
 router.get('/', (req, res) => {
     Store.find({}).then(stores => {
@@ -19,10 +19,13 @@ router.get('/', (req, res) => {
 
 router.post('/create', (req, res) => {
     // res.send('It works...')
-
+    console.log(`Store Router (${req}) ${req.body}`);
     let errors = [];
     if(!req.body.name){
         errors.push({message: 'please add a Title'});
+    }
+    if(!req.body.address){
+        errors.push({message: 'please add an Address'});
     }
 
     if(errors.length>0)
@@ -38,31 +41,37 @@ router.post('/create', (req, res) => {
             password: req.body.password
         });
 
-        for(var i=0;i<req.body.phoneNumbers.length;i++)
+        if(req.body.phoneNumbers)
         {
-            let phoneInfo=req.body.phoneNumbers[i];
-            newStore.phoneNumbers.push({
-                main: phoneInfo.main,
-                title: phoneInfo.title,
-                phoneNumber: phoneInfo.phoneNumber
-            });
-        }
-        for(var j=0;j<req.body.emails.length;j++)
-        {
-            let emailInfo=req.body.emails[j];
-            newStore.emails.push({
-                main: emailInfo.main,
-                title: emailInfo.title,
-                email: emailInfo.email
-            });
+            for(var i=0;i<req.body.phoneNumbers.length;i++)
+            {
+                let phoneInfo=req.body.phoneNumbers[i];
+                newStore.phoneNumbers.push({
+                    main: phoneInfo.main,
+                    title: phoneInfo.title,
+                    phoneNumber: phoneInfo.phoneNumber
+                });
+            }
         }
 
+        if(req.body.emails) {
+            for (var j = 0; j < req.body.emails.length; j++) {
+                let emailInfo = req.body.emails[j];
+                newStore.emails.push({
+                    main: emailInfo.main,
+                    title: emailInfo.title,
+                    email: emailInfo.email
+                });
+            }
+        }
+        console.log(`Store SAVING (${newStore})`);
         newStore.save().then(savedStore => {
-            req.flash('success_message',`${savedStore.name} was Created Successfully`);
-            res.redirect('/admin/stores')
+            res.status(201).send({savedStore});
+            // req.flash('success_message',`${savedStore.name} was Created Successfully`);
+            // res.redirect('/admin/stores')
         }).catch(validator => {
-            res.render('admin/stores/create',{errors:validator.errors});
-            // console.log(`COULD NOT SAVE POST BECAUSE: ${validator}`);
+            res.status(400).send();
+            // res.render('admin/stores/create',{errors:validator.errors});
         });
     }
 });
