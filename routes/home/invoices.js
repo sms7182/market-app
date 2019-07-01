@@ -13,62 +13,85 @@ router.all('/*',(req,res,next)=>{
 
 
 
-router.post('/create',(req,res)=>{
+router.post('/edit',(req,res)=>{
    
-    //console.log(req);
-    //console.log(mongoose.Types.ObjectId.isValid('53cb6b9b4f4ddef1ad47f943'));
+
     if(req.body){
-            var invoice=new Invoice();
-            invoice.slug=req.body.code;
-           // invoice.store=req.body.store.id;
-            invoice.code=req.body.code;
-            invoice.status=req.body.status;
-            invoice.netPrice=req.body.netPrice;
-            invoice.decPrice=req.body.decPrice;
-            invoice.incPrice=req.body.incPrice;
-            invoice.store=req.body.store;
-            invoice.totalPrice=req.body.totalPrice;
-            var index=1;
-            
-            
-            for(var il in req.body.invoiceLines){
-               
-                invoice.invoiceLines.push(s=>{
-                  
-                    s.rowOrder=index;
-                    s.code=il.code;
-                    s.title=il.title;
-                    s.quantity=il.quantity;
-                    s.price=il.price;
-                    s.totalPrice=il.totalPrice;
-                    s.netPrice=il.netPrice;
-                    s.decPrice=il.decPrice;
-                    s.incPrice=il.incPrice;
-                    s.invoice=invoice;
-                })
-                index=index+1;
+        Invoice.findOne({_id:req.body.invoiceId},function(err,obj){
+            console.log('loading ...')
+            if(err){
+                console.log(err);
+               res.send(err);    
             }
+            if(obj&&obj!=null){
+                console.log('start edit invoice')
+               createInvoice(obj,req.body)
+            }
+            else{
+                console.log('start create invoice');
+               var temp= new Invoice();
+
+               createInvoice(temp,req.body);
+
+            }
+            
+        })
+            
 
 
-            console.log(req.body);
+           /* console.log(req.body);
             invoice.save().then(()=>{
                 console.log('invoice saved');
             }).catch(err=>{
                 res.send(err);
-            })
+            })*/
     }
-    res.send('invoice saved')
-})
-
-router.get('/edit',(req,res)=>{
     
-    Invoice.findOne({_id:req.params.id}).then(inv=>{
-   
-      res.send(inv);
-   }).catch(err=>{
-       
-       res.render('Error  '+err);
-   })
 });
+
+
+function createInvoice(invoiceInstance,reqbody){
+   var invoice=invoiceInstance;
+ 
+    
+    invoice.slug=reqbody.code;
+   // invoice.store=req.body.store.id;
+    invoice.code=reqbody.code;
+    invoice.status=reqbody.status;
+    invoice.netPrice=reqbody.netPrice;
+    invoice.decPrice=reqbody.decPrice;
+    invoice.incPrice=reqbody.incPrice;
+    invoice.store=reqbody.store;
+    invoice.totalPrice=reqbody.totalPrice;
+    var index=1;
+    
+    
+    for(var il in reqbody.invoiceLines){
+       
+        invoice.invoiceLines.push(s=>{
+          
+            s.rowOrder=index;
+            s.code=il.code;
+            s.title=il.title;
+            s.quantity=il.quantity;
+            s.price=il.price;
+            s.totalPrice=il.totalPrice;
+            s.netPrice=il.netPrice;
+            s.decPrice=il.decPrice;
+            s.incPrice=il.incPrice;
+            s.invoice=invoice;
+        })
+        index=index+1;
+    }
+    console.log('invoice saved')
+
+  return invoice;
+
+
+
+
+}
+
+
 
 module.exports = router;
