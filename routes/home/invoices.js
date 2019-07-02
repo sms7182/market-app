@@ -25,13 +25,22 @@ router.post('/edit',(req,res)=>{
             }
             if(obj&&obj!=null){
                 console.log('start edit invoice')
-               createInvoice(obj,req.body)
+              obj= createInvoice(obj,req.body)
+              obj.save().then(s=>{
+                console.log('edit saving is working')
+                res.send(s._id);
+            }).catch(err=>res.status(400).send(`could not save because: ${err}`));
             }
             else{
                 console.log('start create invoice');
                var temp= new Invoice();
 
-               createInvoice(temp,req.body);
+              temp= createInvoice(temp,req.body);
+              temp.save().then(s=>{
+                  console.log('create saving is working')
+                  res.send(s._id);
+              }).catch(err=>res.status(400).send(`could not save because: ${err}`));
+             
 
             }
             
@@ -64,9 +73,10 @@ function createInvoice(invoiceInstance,reqbody){
     invoice.store=reqbody.store;
     invoice.totalPrice=reqbody.totalPrice;
     var index=1;
+   
     
     
-    for(var il in reqbody.invoiceLines){
+    /*for(var il in reqbody.invoiceLines){
        
         invoice.invoiceLines.push(s=>{
           
@@ -82,7 +92,7 @@ function createInvoice(invoiceInstance,reqbody){
             s.invoice=invoice;
         })
         index=index+1;
-    }
+    }*/
     console.log('invoice saved')
 
   return invoice;
