@@ -54,7 +54,7 @@ router.post('/register', (req, res) => {
             email: req.body.email
         });
     } else {
-        User.findOne({email: req.body.email}).then(findUser => {
+        UserInfo.findOne({email: req.body.email}).then(findUser => {
 
 
             if (!findUser) {
@@ -90,7 +90,10 @@ router.post('/register', (req, res) => {
 
                             // req.flash('success_message', `${savedUser.email} was Registered Successfully, You Can Login NOW.`);
                             // res.redirect('/login');
-                        }).catch(err => res.status(400).send(`COULD NOT Create User BECAUSE: ${err}`));
+                        }).catch(err => {
+                            // console.log(`COULD NOT Create User BECAUSE: ${err}`);
+                            res.status(400).send(`COULD NOT Create User BECAUSE: ${err}`);
+                        });
                     });
                 });
             } else {

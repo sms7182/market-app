@@ -19,7 +19,6 @@ router.get('/', (req, res) => {
 
 router.post('/create', (req, res) => {
     // res.send('It works...')
-    console.log(`Store Router (${req}) ${req.body}`);
     let errors = [];
     if(!req.body.name){
         errors.push({message: 'please add a Title'});
@@ -64,7 +63,7 @@ router.post('/create', (req, res) => {
                 });
             }
         }
-        console.log(`Store SAVING (${newStore})`);
+        // console.log(`Store SAVING (${newStore})`);
         newStore.save().then(savedStore => {
             res.status(201).send({savedStore});
             // req.flash('success_message',`${savedStore.name} was Created Successfully`);
@@ -127,8 +126,9 @@ router.put('/edit/:id',(req,res)=>{
 
 router.delete('/:id', (req, res) => {
     Store.findByIdAndDelete(req.params.id).then(deletedStore => {
-        req.flash('success_message',`${deletedStore.name} was Deleted Successfully`);
-        res.redirect('/admin/stores');
+        res.status(201).send({deletedStore});
+        // req.flash('success_message',`${deletedStore.name} was Deleted Successfully`);
+        // res.redirect('/admin/stores');
     }).catch(err => res.status(400).send(`COULD NOT DELETE STORE BECAUSE: ${err}`));
 });
 

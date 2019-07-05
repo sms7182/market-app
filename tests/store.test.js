@@ -2,6 +2,7 @@ const request = require('supertest');
 const app = require('../src/appCreate');
 const Store = require('../models/Store');
 const Bank = require('../models/Bank');
+const mongoose = require('mongoose');
 
 let bankOne={
     name: 'Melli Bank',
@@ -16,7 +17,7 @@ beforeEach(async ()=>{
 
 test('Should Create a new Store', async ()=>{
 
-   await request(app).post('/admin/stores/create').send({
+   const response = await request(app).post('/admin/stores/create').send({
         name:'Bla Bla Store',
        address:'52 Street-NO23',
        accountNumber: '123456',
@@ -42,4 +43,31 @@ test('Should Create a new Store', async ()=>{
            }
        ]
     }).expect(201);
+
+   const savedStore = Store.findById(response.body._id);
+       expect(savedStore).not.toBeNull();
+
+});
+
+
+test('Should Remove an existing Store', async ()=>{
+    let storeId = new mongoose.Types.ObjectId();
+    let storeOne=new Store({
+        _id: storeId,
+        name:'Bla Bla Store',
+        address:'52 Street-NO23',
+        bankAccount : {
+            bank: bankOne,
+            accountNumber: '123456'
+        }
+    });
+    await storeOne.save();
+
+    await request(app).delete(`/admin/stores/${storeId}`)
+        .send()
+        .expect(201);
+
+    const checkStore = await Store.findById(storeId);
+
+    expect(checkStore).toBeNull();
 });

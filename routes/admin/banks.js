@@ -18,8 +18,6 @@ router.get('/', (req, res) => {
 
 
 router.post('/create', (req, res) => {
-    // res.send('It works...')
-console.log(`Bank Router (${req}) ${req.body}`);
     let errors = [];
     if(!req.body.name){
         errors.push({message: 'please add a Title'});
@@ -66,9 +64,10 @@ router.put('/edit/:id',(req,res)=>{
 });
 
 router.delete('/:id', (req, res) => {
-    Bank.findByIdAndDelete(req.params.id).then(deletedBank => {
-        req.flash('success_message',`${deletedBank.name} was Deleted Successfully`);
-        res.redirect('/admin/banks');
+       Bank.findByIdAndDelete(req.params.id).then(deletedBank => {
+        res.status(201).send({deletedBank});
+        // req.flash('success_message',`${deletedBank.name} was Deleted Successfully`);
+        // res.redirect('/admin/banks');
     }).catch(err => res.status(400).send(`COULD NOT DELETE BANK BECAUSE: ${err}`));
 });
 
