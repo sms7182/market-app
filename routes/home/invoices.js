@@ -2,6 +2,7 @@ const express=require('express');
 const app=express();
 const router=express.Router();
 const Invoice=require('../../models/Invoice');
+const InvoiceLine=require('../../models/InvoiceLines');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
@@ -25,23 +26,45 @@ router.post('/edit',(req,res)=>{
             }
             if(obj&&obj!=null){
                 console.log('start edit invoice')
-              obj= createInvoice(obj,req.body)
+              obj= createInvoice(obj,req.body);
+              console.log('invoice '+ req.body.invoiceLines[0].code);
+              
               obj.save().then(s=>{
                 console.log('edit saving is working')
-                res.send(s._id);
+                
             }).catch(err=>res.status(400).send(`could not save because: ${err}`));
+             Invoice.findOne({_id:req.body.invoiceId}).populate('InvoiceLines').exec(function(err,invLine){
+                 if(invLine){
+                     console.log('invlines has count');
+                     console.log(invLine);
+                 }
+             })
+
             }
             else{
                 console.log('start create invoice');
                var temp= new Invoice();
 
               temp= createInvoice(temp,req.body);
+            
               temp.save().then(s=>{
-                  console.log('create saving is working')
+                  console.log('create saving is working');
+                  for(var i=0;i<req.body.invoiceLines.length;i++){
+                    var invoiceLine=new InvoiceLine();
+                      invoiceLine.code=req.body.invoiceLines[i].code;
+                      invoiceLine.totalPrice=req.body.invoiceLines[i].totalPrice;
+                      invoiceLine.decPrice=req.body.invoiceLines[i].decPrice;
+                      invoiceLine.incPrice=req.body.invoiceLines[i].incPrice;
+                      invoiceLine.netPrice=req.body.invoiceLines[i].netPrice;
+                      invoiceLine.title=req.body.invoiceLines[i].title;          
+                      invoiceLine.invoice=temp._id;
+                        invoiceLine.save().then(s=>{
+                            console.log('invoice line is saved');
+                        })
+                     }
                   res.send(s._id);
               }).catch(err=>res.status(400).send(`could not save because: ${err}`));
-             
-
+            
             }
             
         })
@@ -76,23 +99,6 @@ function createInvoice(invoiceInstance,reqbody){
    
     
     
-    /*for(var il in reqbody.invoiceLines){
-       
-        invoice.invoiceLines.push(s=>{
-          
-            s.rowOrder=index;
-            s.code=il.code;
-            s.title=il.title;
-            s.quantity=il.quantity;
-            s.price=il.price;
-            s.totalPrice=il.totalPrice;
-            s.netPrice=il.netPrice;
-            s.decPrice=il.decPrice;
-            s.incPrice=il.incPrice;
-            s.invoice=invoice;
-        })
-        index=index+1;
-    }*/
     console.log('invoice saved')
 
   return invoice;
