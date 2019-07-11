@@ -33,12 +33,14 @@ router.post('/edit',(req,res)=>{
                 console.log('edit saving is working')
                 
             }).catch(err=>res.status(400).send(`could not save because: ${err}`));
-             Invoice.findOne({_id:req.body.invoiceId}).populate('InvoiceLines').exec(function(err,invLine){
-                 if(invLine){
-                     console.log('invlines has count');
-                     console.log(invLine);
+             Invoice.findOne({_id:req.body.invoiceId}).populate('invoiceLines')
+          
+             .exec(function(err,invLine){
+               
+                if(invLine){
+                    console.log(invLine);
                  }
-             })
+             });
 
             }
             else{
@@ -46,25 +48,33 @@ router.post('/edit',(req,res)=>{
                var temp= new Invoice();
 
               temp= createInvoice(temp,req.body);
-            
-              temp.save().then(s=>{
+          
+              temp.save(function(err){
                   console.log('create saving is working');
-                  for(var i=0;i<req.body.invoiceLines.length;i++){
-                    var invoiceLine=new InvoiceLine();
-                      invoiceLine.code=req.body.invoiceLines[i].code;
-                      invoiceLine.totalPrice=req.body.invoiceLines[i].totalPrice;
-                      invoiceLine.decPrice=req.body.invoiceLines[i].decPrice;
-                      invoiceLine.incPrice=req.body.invoiceLines[i].incPrice;
-                      invoiceLine.netPrice=req.body.invoiceLines[i].netPrice;
-                      invoiceLine.title=req.body.invoiceLines[i].title;          
-                      invoiceLine.invoice=temp._id;
-                        invoiceLine.save().then(s=>{
-                            console.log('invoice line is saved');
-                        })
-                     }
-                  res.send(s._id);
-              }).catch(err=>res.status(400).send(`could not save because: ${err}`));
-            
+                  console.log(req.body.invoiceLines.length);
+                  
+
+                  res.send(temp._id);
+              });
+              for(var i=0;i<req.body.invoiceLines.length;i++){
+                var invoiceLine=new InvoiceLine();
+                  invoiceLine.code=req.body.invoiceLines[i].code;
+                  invoiceLine.totalPrice=req.body.invoiceLines[i].totalPrice;
+                  invoiceLine.decPrice=req.body.invoiceLines[i].decPrice;
+                  invoiceLine.incPrice=req.body.invoiceLines[i].incPrice;
+                  invoiceLine.netPrice=req.body.invoiceLines[i].netPrice;
+                  invoiceLine.title=req.body.invoiceLines[i].title;          
+                  console.log('before push')
+                  temp.invoiceLines.push(invoiceLine);
+                  console.log('after push')
+                  invoiceLine.invoice=temp._id;
+                    invoiceLine.save(function(err){
+                        console.log(err+'invoice line is saved');
+                    });
+                 }
+                 temp.save(function(err){
+                     console.log('after push saving')
+                 })
             }
             
         })

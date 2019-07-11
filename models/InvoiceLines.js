@@ -25,7 +25,7 @@ const InvoiceLineSchema=new Schema({
         type:SchemaTypes.Double
     },
     totalPrice:{
-        type:SchemaTypes.Do
+        type:SchemaTypes.Double
     },
     date:{
         type:Date,
