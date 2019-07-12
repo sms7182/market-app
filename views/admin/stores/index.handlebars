@@ -1,0 +1,28 @@
+<h1>
+   ALL Stores
+</h1>
+
+<table class="table table-bordered">
+<thead>
+<tr>
+<!--    <th>File</th>-->
+    <th>Name</th>
+    <th>address</th>
+    <th>isActive</th>
+    <th>Date</th>
+</tr>
+</thead>
+
+    <tbody>
+    {{#each stores}}
+    <tr>
+<!--        <td><img height="50" class="img-responsive" src="/uploads/{{file}}" alt =""></td>-->
+        <td><a href="/store/{{slug}}">{{name}}</a></td>
+        <td>{{address}}</td>
+        <td>{{isActive}}</td>
+        <td>{{generateDate date 'MMMM DD'}}</td>
+        <td><a href="/store/{{slug}}" class="btn btn-info">View</a></td>
+    </tr>
+    {{/each}}
+    </tbody>
+</table>

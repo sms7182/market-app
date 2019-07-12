@@ -21,18 +21,21 @@
     "express-handlebars": "^3.1.0",
     "express-session": "^1.16.2",
     "hbs": "^4.0.4",
+    "method-override": "^3.0.0",
     "mongodb": "^3.2.7",
     "mongoose": "^5.6.0",
     "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
     "serve-favicon": "^2.5.0",
     "tedious": "^6.1.2"
   },
   "devDependencies": {
+    "body-parser": "latest",
     "env-cmd": "^9.0.3",
     "jest": "^23.6.0",
     "moment": "^2.24.0",
-    "supertest": "^4.0.2",
-    "body-parser": "latest"
+    "mongoose-url-slugs": "^1.0.2",
+    "supertest": "^4.0.2"
   },
   "repository": {
     "type": "git",

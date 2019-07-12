@@ -1,13 +1,36 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../../models/UserInfo');
+const Store = require('../../models/Store');
 const bcryptjs = require('bcryptjs');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
 router.all('/*', (req, res, next) => {
+    // res.send('it works');
     req.app.locals.layout = 'home';
     next();
+});
+
+
+router.get('/', (req, res) => {
+
+    // res.send('it works');
+    const perPage = 10;
+    const page = req.query.page || 1;
+
+    Store.find({}).skip((perPage * page) - perPage).limit(perPage).sort({date:-1}).then(stores => {
+        Store.countDocuments({}).then(storeCount => {
+            // Category.find({}).then(categories => {
+                res.render('home/index', {
+                    stores: stores,
+                    // categories: categories,
+                    current: parseInt(page),
+                    pages: Math.ceil(storeCount / perPage)
+                });
+            // });
+        });
+    });
 });
 
 router.get('/login', (req, res) => {

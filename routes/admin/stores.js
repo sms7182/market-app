@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Store = require('../../models/Store');
+const Bank = require('../../models/Bank');
 const {userAuthenticated} = require('../../helpers/authentication');
 //
 // router.all('/*',userAuthenticated ,(req, res, next) => {
@@ -16,6 +17,13 @@ router.get('/', (req, res) => {
     })
 });
 
+
+router.get('/create', (req, res) => {
+    //res.send('It works...');
+    Bank.find({}).then(banks => {
+        res.render('admin/stores/create', {banks: banks});
+    })
+});
 
 router.post('/create', (req, res) => {
     // res.send('It works...')

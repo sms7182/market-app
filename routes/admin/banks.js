@@ -17,10 +17,15 @@ router.get('/', (req, res) => {
 });
 
 
+router.get('/create', (req, res) => {
+    res.render('admin/banks/create');
+});
+
 router.post('/create', (req, res) => {
     let errors = [];
+    console.log(req);
     if(!req.body.name){
-        errors.push({message: 'please add a Title'});
+        errors.push({message: 'please add a Name'});
     }
 
     if(errors.length>0)

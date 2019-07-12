@@ -1,0 +1,44 @@
+<h1>Create Store</h1>
+
+{{#each errors}}
+    <div class="alert alert-danger">
+    {{message}}
+    </div>
+{{/each}}
+
+<form action="/admin/stores/create" method="post" enctype="multipart/form-data" >
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input name="name" type="text" class="form-control" id="name" placeholder="Enter Name" required>
+    </div>
+    <div class="form-group">
+        <label for="address">Address</label>
+        <input name="address" type="text" class="form-control" id="address" placeholder="Enter Address" required>
+    </div>
+    <div class="form-group">
+        <label for="bank">Bank</label>
+
+        <select name="bank" id="bank" class="form-control">
+            {{#each banks}}
+                <option value="{{id}}">{{name}}</option>
+            {{/each}}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="accountNumber">AccountNumber</label>
+        <input name="accountNumber" type="text" class="form-control" id="accountNumber" placeholder="Enter AccountNumber" required>
+    </div>
+<!--    <div class="form-group">-->
+<!--        <label for="file">File</label>-->
+<!--        <input name="file" type="file" class="form-control" id="file" >-->
+<!--    </div>-->
+
+    <div class="form-check">
+        <label for="isActive" class="form-check-label">
+        <input name="isActive" type="checkbox" class="form-check-input" id="isActive" >
+            Active
+        </label>
+    </div>
+
+    <button type="submit" class="btn-primary">Create Store</button>
+</form>
