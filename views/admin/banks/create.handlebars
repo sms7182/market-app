@@ -6,14 +6,14 @@
     </div>
 {{/each}}
 
-<form action="/admin/banks/create" method="post" enctype="multipart/form-data" >
+<form action="/admin/banks/create" method="post">
     <div class="form-group">
         <label for="name">Name</label>
-        <input name="name" type="text" class="form-control" id="name" placeholder="Enter Name" required>
+        <input name="name" type="text" class="form-control" placeholder="Enter Name" required>
     </div>
     <div class="form-group">
         <label for="address">Address</label>
-        <input name="address" type="text" class="form-control" id="address" placeholder="Enter Address" required>
+        <input name="address" type="text" class="form-control" placeholder="Enter Address" required>
     </div>
 
 <!--    <div class="form-group">-->
@@ -23,10 +23,10 @@
 
     <div class="form-check">
         <label for="isActive" class="form-check-label">
-        <input name="isActive" type="checkbox" class="form-check-input" id="isActive" >
+        <input name="isActive" type="checkbox" class="form-check-input" >
             Active
         </label>
     </div>
 
-    <button type="submit" class="btn-primary">Create Bank</button>
+    <button class="btn-primary">Create Bank</button>
 </form>

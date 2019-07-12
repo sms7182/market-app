@@ -48,6 +48,12 @@ router.post('/create', (req, res) => {
             password: req.body.password
         });
 
+        let isActive = false;
+        if (req.body.isActive) {
+            isActive = true;
+        }
+        newStore.isActive=isActive;
+
         if(req.body.phoneNumbers)
         {
             for(var i=0;i<req.body.phoneNumbers.length;i++)
@@ -73,12 +79,12 @@ router.post('/create', (req, res) => {
         }
         // console.log(`Store SAVING (${newStore})`);
         newStore.save().then(savedStore => {
-            res.status(201).send({savedStore});
-            // req.flash('success_message',`${savedStore.name} was Created Successfully`);
-            // res.redirect('/admin/stores')
+            // res.status(201).send({savedStore});
+            req.flash('success_message',`${savedStore.name} was Created Successfully`);
+            res.redirect('/admin/stores')
         }).catch(validator => {
-            res.status(400).send();
-            // res.render('admin/stores/create',{errors:validator.errors});
+            // res.status(400).send();
+            res.render('admin/stores/create',{errors:validator.errors});
         });
     }
 });
@@ -101,7 +107,12 @@ router.put('/edit/:id',(req,res)=>{
             accountNumber: req.body.accountNumber
         };
         store.password= req.body.password;
-        store.isActive=req.body.isActive;
+
+        let isActive = false;
+        if (req.body.isActive) {
+            isActive = true;
+        }
+        store.isActive=isActive;
 
         store.phoneNumbers=[];
         for(var i=0;i<req.body.phoneNumbers.length;i++)
@@ -134,10 +145,22 @@ router.put('/edit/:id',(req,res)=>{
 
 router.delete('/:id', (req, res) => {
     Store.findByIdAndDelete(req.params.id).then(deletedStore => {
-        res.status(201).send({deletedStore});
-        // req.flash('success_message',`${deletedStore.name} was Deleted Successfully`);
-        // res.redirect('/admin/stores');
+        // res.status(201).send({deletedStore});
+        req.flash('success_message',`${deletedStore.name} was Deleted Successfully`);
+        res.redirect('/admin/stores');
     }).catch(err => res.status(400).send(`COULD NOT DELETE STORE BECAUSE: ${err}`));
+});
+
+router.post('/changeActive/:id', (req, res) => {
+    Store.findById(req.params.id).then(store => {
+        // res.status(201).send({deletedStore});
+        store.isActive = !store.isActive;
+        store.save().then(savedStore=>{
+            req.flash('success_message',`${store.name}'s Active State was Updated Successfully`);
+            res.redirect('/admin/stores');
+        });
+
+    }).catch(err => res.status(400).send(`COULD NOT Active/DeActive STORE BECAUSE: ${err}`));
 });
 
 module.exports = router;

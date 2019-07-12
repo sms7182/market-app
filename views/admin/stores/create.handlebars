@@ -6,19 +6,19 @@
     </div>
 {{/each}}
 
-<form action="/admin/stores/create" method="post" enctype="multipart/form-data" >
+<form action="/admin/stores/create" method="post" >
     <div class="form-group">
         <label for="name">Name</label>
-        <input name="name" type="text" class="form-control" id="name" placeholder="Enter Name" required>
+        <input name="name" type="text" class="form-control" placeholder="Enter Name" required>
     </div>
     <div class="form-group">
         <label for="address">Address</label>
-        <input name="address" type="text" class="form-control" id="address" placeholder="Enter Address" required>
+        <input name="address" type="text" class="form-control" placeholder="Enter Address" required>
     </div>
     <div class="form-group">
         <label for="bank">Bank</label>
 
-        <select name="bank" id="bank" class="form-control">
+        <select name="bank" class="form-control">
             {{#each banks}}
                 <option value="{{id}}">{{name}}</option>
             {{/each}}
@@ -26,7 +26,7 @@
     </div>
     <div class="form-group">
         <label for="accountNumber">AccountNumber</label>
-        <input name="accountNumber" type="text" class="form-control" id="accountNumber" placeholder="Enter AccountNumber" required>
+        <input name="accountNumber" type="text" class="form-control" placeholder="Enter AccountNumber" required>
     </div>
 <!--    <div class="form-group">-->
 <!--        <label for="file">File</label>-->
@@ -35,10 +35,10 @@
 
     <div class="form-check">
         <label for="isActive" class="form-check-label">
-        <input name="isActive" type="checkbox" class="form-check-input" id="isActive" >
+        <input name="isActive" type="checkbox" class="form-check-input" >
             Active
         </label>
     </div>
 
-    <button type="submit" class="btn-primary">Create Store</button>
+    <button class="btn-primary">Create Store</button>
 </form>

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../../models/UserInfo');
 const Store = require('../../models/Store');
+const UserStore = require('../../models/UserStore');
 const bcryptjs = require('bcryptjs');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
@@ -18,7 +19,18 @@ router.get('/', (req, res) => {
     // res.send('it works');
     const perPage = 10;
     const page = req.query.page || 1;
-
+    if (req.user) {
+        UserStore.find({user: req.user.id}).populate('favourites').then(stores => {
+            UserStore.countDocuments({user: req.user.id}).then(storeCount=>{
+                res.render('home/index', {
+                    stores: stores,
+                    current: parseInt(page),
+                    pages: Math.ceil(storeCount / perPage)
+                });
+            });
+        });
+    }
+    else{
     Store.find({}).skip((perPage * page) - perPage).limit(perPage).sort({date:-1}).then(stores => {
         Store.countDocuments({}).then(storeCount => {
             // Category.find({}).then(categories => {
@@ -31,6 +43,7 @@ router.get('/', (req, res) => {
             // });
         });
     });
+    }
 });
 
 router.get('/login', (req, res) => {

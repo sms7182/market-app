@@ -17,11 +17,22 @@
     {{#each stores}}
     <tr>
 <!--        <td><img height="50" class="img-responsive" src="/uploads/{{file}}" alt =""></td>-->
-        <td><a href="/store/{{slug}}">{{name}}</a></td>
+        <td><a href="/admin/stores/edit/{{id}}">{{name}}</a></td>
         <td>{{address}}</td>
         <td>{{isActive}}</td>
         <td>{{generateDate date 'MMMM DD'}}</td>
-        <td><a href="/store/{{slug}}" class="btn btn-info">View</a></td>
+        <td>
+            <form action="/admin/stores/changeActive/{{id}}" method="post">
+                <button type="submit"  {{#if isActive}} class="btn btn-danger" {{else}} class="btn btn-success" {{/if}}>
+                {{#if isActive}} DeActivate {{else}}Activate{{/if}}</button>
+            </form>
+        </td>
+        <td><a href="/admin/stores/edit/{{id}}" class="btn btn-info">View</a></td>
+        <td>
+            <form action="/admin/stores/{{id}}?_method=DELETE" method="post">
+                <button type="submit" class="btn btn-danger">DELETE</button>
+            </form>
+        </td>
     </tr>
     {{/each}}
     </tbody>

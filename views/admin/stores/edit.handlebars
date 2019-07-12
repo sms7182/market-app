@@ -1,15 +1,15 @@
-<h1>Update Post</h1>
+<h1>Update Store</h1>
 
-<form action="/admin/posts/edit/{{post.id}}?_method=PUT" method="post" enctype="multipart/form-data">
+<form action="/admin/stores/edit/{{store.id}}?_method=PUT" method="post" >
     <div class="form-group">
-        <label for="title">Title</label>
-        <input name="title" type="text" class="form-control" id="title" placeholder="Enter Title" value="{{post.title}}"
+        <label for="name">Name</label>
+        <input name="name" type="text" class="form-control" placeholder="Enter Name" value="{{store.name}}"
                required>
     </div>
     <div class="form-group">
         <label for="category">Category</label>
 
-        <select name="category" id="category" class="form-control">
+        <select name="category"  class="form-control">
             {{#select post.category}}
                 {{#each categories}}
                     <option value="{{id}}">{{name}}</option>

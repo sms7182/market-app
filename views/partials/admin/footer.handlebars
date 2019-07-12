@@ -48,10 +48,10 @@
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Posts', 'Comments', 'Categories'],
+            labels: ['Banks', 'Stores', 'Users'],
             datasets: [{
                 label: '# of Count',
-                data: [{{postCount}}, {{commentCount}}, {{categoryCount}}],
+                data: [{{bankCount}}, {{storeCount}}, {{userCount}}],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
@@ -88,10 +88,10 @@
     var myPie = new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: ['Public', 'Private', 'Draft'],
+            labels: ['Active', 'InActive'],
             datasets: [{
-                label: '# of Votes',
-                data: [{{publicCount}}, {{privateCount}}, {{draftCount}}],
+                label: '# of Stores',
+                data: [{{activeCount}}, {{deactiveCount}}],
                 backgroundColor: [
                     'rgba(75, 192, 192, 0.2)',
                     'rgba(153, 102, 255, 0.2)',

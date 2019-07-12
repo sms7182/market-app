@@ -11,7 +11,7 @@ test('Should Create a new BANK', async ()=>{
    await request(app).post('/admin/banks/create').send({
         name:'Zirat Bank',
         address:'5Street - No2'
-    }).expect(201);
+    }).expect(302);
 });
 
 test('Should Remove an existing BANK', async ()=>{
@@ -25,7 +25,7 @@ test('Should Remove an existing BANK', async ()=>{
 
    await request(app).delete(`/admin/banks/${bankId}`)
        .send()
-       .expect(201);
+       .expect(302);
 
     const checkBank = await Bank.findById(bankId);
 
