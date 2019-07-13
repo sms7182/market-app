@@ -6,9 +6,12 @@ const InvoiceLine=require('../../models/InvoiceLines');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
-router.all('/*',(req,res,next)=>{
-    req.app.locals.layout='invoice';
-    next();
+
+
+router.get('/',(req,res)=>{
+Invoice.find({}).populate('invoiceLines').exec(function(err,obj){
+    res.send(obj);
+})
 })
 
 
