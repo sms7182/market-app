@@ -1,11 +1,15 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const URLSlug = require('mongoose-url-slugs');
 
 const StoreSchema = new Schema({
   name:{
     type: String,
     required: true
   },
+    slug: {
+        type: String
+    },
   address:{
     type: String,
     required: true
@@ -14,7 +18,7 @@ const StoreSchema = new Schema({
     bank: {
       type: Schema.Types.ObjectId,
       ref: 'banks',
-      required: true
+      required: false
     },
       accountNumber:{
         type: String,
@@ -51,12 +55,17 @@ const StoreSchema = new Schema({
   }],
   password:{
     type: String,
-    required: true
+    required: false
   },
+    isActive: {
+        type: Boolean,
+        default: true
+    },
   date:{
     type: Date,
     default: Date.now()
   }
 });
 
+StoreSchema.plugin(URLSlug('name',{field:'slug'}));
 module.exports = mongoose.model('stores',StoreSchema);
