@@ -64,6 +64,6 @@ app.use('/admin', admin);
 app.use('/admin/banks', banks);
 app.use('/admin/stores', stores);
 app.use('/userInfos', userInfos);
-app.use('/invoice',invoices);
+app.use('/invoices',invoices);
 
 module.exports = app;
