@@ -1,0 +1,21 @@
+<h1>Update Bank</h1>
+
+<form action="/admin/banks/edit/{{bank.id}}?_method=PUT" method="post" >
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input name="name" type="text" class="form-control" value="{{bank.name}}" placeholder="Enter Name" required>
+    </div>
+    <div class="form-group">
+        <label for="address">Address</label>
+        <input name="address" type="text" class="form-control" value="{{bank.address}}" placeholder="Enter Address" required>
+    </div>
+    <div class="form-check">
+        <label for="isActive" class="form-check-label">
+            <input name="isActive" type="checkbox" class="form-check-input" {{#if
+                    bank.isActive}} checked="checked" {{/if}} >
+            Active
+        </label>
+    </div>
+
+    <button class="btn-primary">Update Bank</button>
+</form>

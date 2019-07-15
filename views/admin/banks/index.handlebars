@@ -1,0 +1,39 @@
+<h1>
+   ALL Banks
+</h1>
+
+<table class="table table-bordered">
+<thead>
+<tr>
+<!--    <th>File</th>-->
+    <th>Name</th>
+    <th>address</th>
+    <th>isActive</th>
+    <th>Date</th>
+</tr>
+</thead>
+
+    <tbody>
+    {{#each banks}}
+    <tr>
+<!--        <td><img height="50" class="img-responsive" src="/uploads/{{file}}" alt =""></td>-->
+        <td><a href="/admin/banks/edit/{{id}}">{{name}}</a></td>
+        <td>{{address}}</td>
+        <td>{{isActive}}</td>
+        <td>{{generateDate date 'MMMM DD'}}</td>
+        <td>
+            <form action="/admin/banks/changeActive/{{id}}" method="post">
+                <button type="submit"  {{#if isActive}} class="btn btn-danger" {{else}} class="btn btn-success" {{/if}}>
+                    {{#if isActive}} DeActivate {{else}}Activate{{/if}}</button>
+            </form>
+        </td>
+        <td><a href="/admin/banks/edit/{{id}}" class="btn btn-info">Edit</a></td>
+        <td>
+            <form action="/admin/banks/{{id}}?_method=DELETE" method="post">
+                <button type="submit" class="btn btn-danger">DELETE</button>
+            </form>
+        </td>
+    </tr>
+    {{/each}}
+    </tbody>
+</table>
