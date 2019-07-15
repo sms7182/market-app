@@ -10,10 +10,13 @@ var ObjectId = Schema.ObjectId;
 
 router.get('/',(req,res)=>{
 Invoice.find({}).populate('invoiceLines').exec(function(err,obj){
-    res.send(obj);
+    res.render('admin/invoices',{invoices:obj})
+   // res.send(obj);
 })
 })
-
+router.get('/create', (req, res) => {
+    res.render('admin/invoices/create');
+});
 
 
 
