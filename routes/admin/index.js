@@ -3,6 +3,7 @@ const router = express.Router();
 const Store = require('../../models/Store');
 const Bank = require('../../models/Bank');
 const UserInfo = require('../../models/UserInfo');
+const Invoice=require('../../models/Invoice');
 // const faker = require('faker');
 const {userAuthenticated} = require('../../helpers/authentication');
 const mongoose = require('mongoose');
@@ -31,7 +32,8 @@ router.get('/', (req, res) => {
                 }
             ]).exec(),
             Bank.countDocuments({}).exec(),
-            UserInfo.countDocuments({}).exec()
+            UserInfo.countDocuments({}).exec(),
+            Invoice.countDocuments({}).exec()
         ];
 
 
@@ -45,6 +47,7 @@ router.get('/', (req, res) => {
             storeCount: (activeCount ? activeCount.count : 0) + (deactiveCount ? deactiveCount.count : 0) ,
             bankCount: bankCount,
             userCount: userCount,
+            invoiceCount:invoiceCount,
             activeCount: activeCount ? activeCount.count : 0,
             deactiveCount: deactiveCount ? deactiveCount.count : 0
         });
