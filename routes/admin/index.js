@@ -47,7 +47,7 @@ router.get('/', (req, res) => {
             storeCount: (activeCount ? activeCount.count : 0) + (deactiveCount ? deactiveCount.count : 0) ,
             bankCount: bankCount,
             userCount: userCount,
-            invoiceCount:invoiceCount,
+          //  invoiceCount:invoiceCount?invoiceCount:0,
             activeCount: activeCount ? activeCount.count : 0,
             deactiveCount: deactiveCount ? deactiveCount.count : 0
         });

@@ -28,8 +28,10 @@
     "package-name": "^0.1.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "quagga": "^0.12.1",
     "serve-favicon": "^2.5.0",
-    "tedious": "^6.1.2"
+    "tedious": "^6.1.2",
+    "usb-barcode-scanner": "^1.0.2"
   },
   "devDependencies": {
     "body-parser": "latest",
