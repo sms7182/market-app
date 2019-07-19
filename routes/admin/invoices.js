@@ -14,106 +14,161 @@ Invoice.find({}).populate('invoiceLines').exec(function(err,obj){
    // res.send(obj);
 })
 })
+
 router.get('/create', (req, res) => {
-    res.render('admin/invoices/create');
-});
-
-
-
-router.post('/edit',(req,res)=>{
+    //res.send('It works...');
    
-    if(req.body){
-        Invoice.findOne({_id:req.body.invoiceId}).populate('invoiceLines').exec(function(err,obj){
-            console.log('loading ...');
-            
-            if(err){
-                console.log(err);
-               res.send(err);    
-            }
-            if(obj&&obj!=null){
-              console.log('start edit invoice')
-              obj= createOrEditInvoice(obj,req.body);
-              console.log(obj.invoiceLines);
-              
-             obj.save();
-         let cnt=0;
-         cnt=obj.invoiceLines.length;
-              for(var i=0;i<req.body.invoiceLines.length;i++){
-                if(req.body.invoiceLines[i].id&&req.body.invoiceLines[i].id!=null){
-                InvoiceLine.findOneAndUpdate({_id:req.body.invoiceLines[i].id},{$set:{
-                    totalPrice:req.body.invoiceLines[i].totalPrice,
-                    decPrice:req.body.invoiceLines[i].decPrice,
-                    incPrice:req.body.invoiceLines[i].incPrice,
-                    netPrice:req.body.invoiceLines[i].netPrice,
-                }},{new:true},function(err,doc){
-                    if(err){
-                        console.log('update line with id: '+req.body.invoiceLines[i].id+' has error '+err);
-                    }
-                })
-                console.log('updated line with id:'+req.body.invoiceLines[i].id);
-                }
-                else{
-                    console.log(obj);
-                var invoiceLine=new InvoiceLine();
-                  invoiceLine.code=req.body.invoiceLines[i].code;
-                  invoiceLine.rowOrder=cnt;
-                  invoiceLine.totalPrice=req.body.invoiceLines[i].totalPrice;
-                  invoiceLine.quantity=req.body.invoiceLines[i].quantity;
-                  invoiceLine.decPrice=req.body.invoiceLines[i].decPrice;
-                  invoiceLine.incPrice=req.body.invoiceLines[i].incPrice;
-                  invoiceLine.netPrice=req.body.invoiceLines[i].netPrice;
-                  invoiceLine.title=req.body.invoiceLines[i].title;    
-                 cnt=cnt+1;
-                  obj.invoiceLines.push(invoiceLine);
-                  invoiceLine.invoice=obj._id;
-                  invoiceLine.save(function(err){
-                       if(err){
-
-                           console.log(err);
-                           res.send('Error in line saving: '+err);
-                       }
-                    });
-                 }
-                }
-             
-              res.send(obj._id);
-            }
-     
-     else{
-                console.log('start create invoice');
-               var temp= new Invoice();
-
-              temp= createOrEditInvoice(temp,req.body);
-          
-              temp.save(function(err){
-                 console.log(err);
-                 res.send(err);
-              });
-              for(var i=0;i<req.body.invoiceLines.length;i++){
-                var invoiceLine=new InvoiceLine();
-                  invoiceLine.code=req.body.invoiceLines[i].code;
-                  invoiceLine.totalPrice=req.body.invoiceLines[i].totalPrice;
-                  invoiceLine.decPrice=req.body.invoiceLines[i].decPrice;
-                  invoiceLine.incPrice=req.body.invoiceLines[i].incPrice;
-                  invoiceLine.netPrice=req.body.invoiceLines[i].netPrice;
-                  invoiceLine.title=req.body.invoiceLines[i].title;  
-                  invoiceLine.rowOrder=i;        
-                  temp.invoiceLines.push(invoiceLine);
-                  invoiceLine.invoice=temp._id;
-                  invoiceLine.save(function(err){
-                       if(err){
-
-                           console.log(err);
-                           res.send('Error in line saving: '+err);
-                       }
-                    });
-                 }
-                
-            }
-            
-        });
-    } 
+    res.render('admin/invoices/create');
+    
 });
+router.post('/create', (req, res) => {
+   if(req&&req.body){
+    var netPrice=req.body.netPrice;
+    var incPrice=0;
+    var decPrice=0;
+    var totalPrice=0;
+    if(req.body.incPrice){
+        incPrice=req.body.incPrice;
+    }
+    if(req.body.decPrice){
+        decPrice=req.body.decPrice;
+    }
+    totalPrice=netPrice+incPrice-decPrice;
+    var invoice= new Invoice();
+
+    invoice.netPrice=netPrice;
+    invoice.decPrice=decPrice;
+    invoice.incPrice=incPrice;
+    invoice.totalPrice=totalPrice;
+    invoice.slug=req.body.code;
+    invoice.code=req.body.code;
+    invoice.save();
+    var invoiceLine=new InvoiceLine();
+    invoiceLine.code=req.body.code;
+    invoiceLine.rowOrder=1;
+    invoiceLine.totalPrice=totalPrice;
+    invoiceLine.quantity=1;
+    invoiceLine.decPrice=decPrice;
+    invoiceLine.incPrice=incPrice;
+    invoiceLine.netPrice=netPrice;
+    invoiceLine.title=req.body.title;    
+   
+    invoice.invoiceLines.push(invoiceLine);
+   
+    invoiceLine.invoice=invoice._id;
+    invoiceLine.save(function(err){
+               if(err){
+                   console.log(err);
+                   res.send('Error in line saving: '+err);
+               }
+               else{
+                res.render('admin/invoices/edit',{invoice:invoice});
+               }
+    });
+   }
+ 
+   
+});
+
+router.put('/addItem/:id',(req,res)=>{
+    
+    if(req&&req.body){
+       console.log('id is '+req.params.id);
+      Invoice.findOne({_id:req.params.id}).populate('invoiceLines').exec(function(err,invoice){
+          console.log('Loading ...'+req.params.id);
+          if(err){
+              console.log(err);
+              res.send(err);
+          }
+          if(invoice&&invoice!=null){
+              console.log('Edit invoice start ...');
+              var netPrice=req.body.netPrice;
+              var incPrice=0;
+              var decPrice=0;
+              var totalPrice=0;
+              if(req.body.incPrice){
+                  incPrice=req.body.incPrice;
+              }
+              if(req.body.decPrice){
+                  decPrice=req.body.decPrice;
+              }
+              totalPrice=netPrice+incPrice-decPrice;
+              invoice.netPrice=invoice.netPrice+netPrice;
+              invoice.incPrice=invoice.incPrice+incPrice;
+              invoice.decPrice=invoice.decPrice+decPrice;
+              invoice.totalPrice=invoice.totalPrice+totalPrice;
+              invoice.save();
+              var invoiceLine=new InvoiceLine();
+              invoiceLine.code=req.body.code;
+              invoiceLine.rowOrder=invoice.invoiceLines.length+1;
+              invoiceLine.totalPrice=totalPrice;
+              invoiceLine.quantity=1;
+              invoiceLine.decPrice=decPrice;
+              invoiceLine.incPrice=incPrice;
+              invoiceLine.netPrice=netPrice;
+           
+              invoice.invoiceLines.push(invoiceLine);
+              invoiceLine.invoice=invoice._id;
+              invoiceLine.save(function(err){
+                   if(err){
+
+                       console.log(err);
+                       res.send('Error in line saving: '+err);
+                   }
+                   else{
+                    res.render('admin/invoices/edit',{invoice:invoice});
+                   }
+                });
+
+          }
+          else{
+            var netPrice=req.body.netPrice;
+            var incPrice=0;
+            var decPrice=0;
+            var totalPrice=0;
+            if(req.body.incPrice){
+                incPrice=req.body.incPrice;
+            }
+            if(req.body.decPrice){
+                decPrice=req.body.decPrice;
+            }
+            totalPrice=netPrice+incPrice-decPrice;
+            var invoice= new Invoice();
+
+            invoice.netPrice=netPrice;
+            invoice.decPrice=decPrice;
+            invoice.incPrice=incPrice;
+            invoice.totalPrice=totalPrice;
+            invoice.slug=req.body.code;
+            invoice.code=req.body.code;
+            invoice.save();
+            var invoiceLine=new InvoiceLine();
+            invoiceLine.code=req.body.code;
+            invoiceLine.rowOrder=1;
+            invoiceLine.totalPrice=totalPrice;
+            invoiceLine.quantity=1;
+            invoiceLine.decPrice=decPrice;
+            invoiceLine.incPrice=incPrice;
+            invoiceLine.netPrice=netPrice;
+            invoiceLine.title=req.body.title;    
+           
+            invoice.invoiceLines.push(invoiceLine);
+           
+            invoiceLine.invoice=invoice._id;
+            invoiceLine.save(function(err){
+                       if(err){
+                           console.log(err);
+                           res.send('Error in line saving: '+err);
+                       }
+                       else{
+                        res.render('admin/invoices/edit',{invoice:invoice});
+                       }
+            });
+          }
+      })
+  }
+});
+
 
 function createOrEditInvoice(invoiceInstance,reqbody){
    var invoice=invoiceInstance;

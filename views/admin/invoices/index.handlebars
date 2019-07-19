@@ -1,10 +1,9 @@
-<h1>All Invoices</h1>
+<h1>All Items</h1>
 <table class="table table-bordered">
     <thead> 
         <tr>
-            <th>Status</th>
-            <th>Store</th>
-            <th>NetPrice</th>
+            <th>Item</th>
+            <th>UnitPrice</th>
             <th>IncPrice</th>
             <th>DecPrice</th>
             <th>TotalPrice</th>
@@ -13,8 +12,7 @@
     <tbody>
         {{#each invoices}}
         <tr>
-            <td><a href="/admin/invoices/edit/{{id}}">{{status}}</a></td>
-            <td>{{store}}</td>
+            <td>{{item}}</td>
             <td>{{netPrice}}</td>
             <td>{{incPrice}}</td>
             <td>{{decPrice}}</td>
