@@ -15,7 +15,7 @@ const BankSchema = new Schema({
     default: true
   },
   icon:{
-    type: String
+    type: Buffer
   },
   date:{
     type: Date,

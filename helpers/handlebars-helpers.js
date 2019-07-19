@@ -10,6 +10,14 @@ module.exports = {
 
         return moment(date).format(format);
     },
+    generateImage: function (buffer) {
+        if(buffer)
+        {
+            return Buffer.from(buffer,'binary').toString('base64');
+        }
+
+        return '';
+    },
     paginate: function (options) {
         let output = '';
 

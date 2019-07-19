@@ -61,6 +61,9 @@ const StoreSchema = new Schema({
         type: Boolean,
         default: true
     },
+    icon:{
+        type: Buffer
+    },
   date:{
     type: Date,
     default: Date.now()

@@ -5,7 +5,7 @@
 <table class="table table-bordered">
 <thead>
 <tr>
-<!--    <th>File</th>-->
+    <th>Icon</th>
     <th>Name</th>
     <th>address</th>
     <th>isActive</th>
@@ -16,7 +16,7 @@
     <tbody>
     {{#each stores}}
     <tr>
-<!--        <td><img height="50" class="img-responsive" src="/uploads/{{file}}" alt =""></td>-->
+        <td><img height="50" src="data:image/jpeg;base64,{{generateImage icon}}" alt =""></td>
         <td><a href="/admin/stores/edit/{{id}}">{{name}}</a></td>
         <td>{{address}}</td>
         <td>{{isActive}}</td>

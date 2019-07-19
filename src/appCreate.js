@@ -17,10 +17,10 @@ mongoose.connect(process.env.MONGODB_URL||mongoDbUrl, {useCreateIndex: true,useN
 
 app.use(express.static(path.join(__dirname, '../public')));
 
-const {select,generateDate,paginate} = require('../helpers/handlebars-helpers');
+const {select,generateDate,generateImage,paginate} = require('../helpers/handlebars-helpers');
 
 //Set View Engines
-app.engine('handlebars', exphbs({defaultLayout: 'home', helpers: {select: select, generateDate: generateDate,paginate: paginate}}));
+app.engine('handlebars', exphbs({defaultLayout: 'home', helpers: {select: select, generateDate: generateDate,generateImage:generateImage,paginate: paginate}}));
 app.set('view engine', 'handlebars');
 
 //Body Parser

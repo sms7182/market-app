@@ -1,4 +1,5 @@
 const express = require('express');
+const multer = require('multer');
 const router = express.Router();
 const Bank = require('../../models/Bank');
 const {userAuthenticated} = require('../../helpers/authentication');
@@ -21,8 +22,21 @@ router.get('/create', (req, res) => {
     res.render('admin/banks/create');
 });
 
-router.post('/create', (req, res) => {
+const upload=multer({
+    limits:{
+        fileSize: 1000000
+    },
+    fileFilter(req,file,cb){
+        if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
+            return cb(new Error('Please upload an image'));
+        }
+        cb(undefined,true);
+    }
+});
+
+router.post('/create',upload.single('icon'), (req, res) => {
     let errors = [];
+    // console.log(req);
     if(!req.body.name){
         errors.push({message: 'please add a Name'});
     }
@@ -36,6 +50,13 @@ router.post('/create', (req, res) => {
             address: req.body.address
         });
 
+        if(req.file)
+        {
+            newBank.icon=req.file.buffer;
+        }else {
+            newBank.icon = null;
+        }
+
         let isActive = false;
         if (req.body.isActive) {
             isActive = true;
@@ -46,11 +67,11 @@ router.post('/create', (req, res) => {
         newBank.save().then(savedBank => {
             // res.status(201).send({savedBank});
             req.flash('success_message',`${savedBank.name} was Created Successfully`);
-            res.redirect('/admin/banks')
+            res.redirect('/admin/banks');
         }).catch(validator => {
             // res.status(400).send();
             console.log(validator );
-            res.render('admin/banks/create',{errors:validator.errors});
+            res.status(400).render('admin/banks/create',{errors:validator.errors});
         });
     }
 });
@@ -63,7 +84,7 @@ router.get('/edit/:id',(req,res)=>{
 
 });
 
-router.put('/edit/:id',(req,res)=>{
+router.put('/edit/:id',upload.single('icon'),(req,res)=>{
     Bank.findById(req.params.id).then(bank=>{
         bank.name=req.body.name;
         bank.address=req.body.address;
@@ -72,7 +93,12 @@ router.put('/edit/:id',(req,res)=>{
         if (req.body.isActive) {
             isActive = true;
         }
-
+        if(req.file)
+        {
+            bank.icon=req.file.buffer;
+        }else {
+            bank.icon = null;
+        }
         bank.isActive=isActive;
         bank.save().then(updatedBank=>{
             req.flash('success_message',`${updatedBank.name} was Updated Successfully`);
@@ -96,7 +122,7 @@ router.post('/changeActive/:id', (req, res) => {
         bank.isActive = !bank.isActive;
         bank.save().then(savedBank=>{
             req.flash('success_message',`${bank.name}'s Active State was Updated Successfully`);
-            res.redirect('/admin/banks');
+            res.status(201).redirect('/admin/banks');
         });
 
     }).catch(err => res.status(400).send(`COULD NOT Active/DeActive Bank BECAUSE: ${err}`));

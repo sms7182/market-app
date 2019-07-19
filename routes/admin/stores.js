@@ -1,4 +1,5 @@
 const express = require('express');
+const multer = require('multer');
 const router = express.Router();
 const Store = require('../../models/Store');
 const Bank = require('../../models/Bank');
@@ -8,6 +9,18 @@ const {userAuthenticated} = require('../../helpers/authentication');
 //     req.app.locals.layout = 'admin';
 //     next();
 // });
+
+const upload=multer({
+    limits:{
+        fileSize: 1000000
+    },
+    fileFilter(req,file,cb){
+        if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
+            return cb(new Error('Please upload an image'));
+        }
+        cb(undefined,true);
+    }
+});
 
 router.get('/', (req, res) => {
     Store.find({}).then(stores => {
@@ -25,7 +38,7 @@ router.get('/create', (req, res) => {
     })
 });
 
-router.post('/create', (req, res) => {
+router.post('/create',upload.single('icon'), (req, res) => {
     // res.send('It works...')
     let errors = [];
     if(!req.body.name){
@@ -47,6 +60,13 @@ router.post('/create', (req, res) => {
                           },
             password: req.body.password
         });
+
+        if(req.file)
+        {
+            newStore.icon=req.file.buffer;
+        }else {
+            newStore.icon = null;
+        }
 
         let isActive = false;
         if (req.body.isActive) {
@@ -94,12 +114,15 @@ router.get('/edit/:id',(req,res)=>{
     Store.findOne({_id:req.params.id}).then(store=>{
         store.accountNumber=store.bankAccount.accountNumber;
         store.bank=store.bankAccount.bank;
-        res.render('admin/stores/edit',{store:store});
+
+        Bank.find({}).then(banks => {
+            res.render('admin/stores/edit', {store: store, banks: banks});
+        });
     });
 
 });
 
-router.put('/edit/:id',(req,res)=>{
+router.put('/edit/:id',upload.single('icon'),(req,res)=>{
     Store.findById(req.params.id).then(store=>{
         store.name=req.body.name;
         store.address=req.body.address;
@@ -108,6 +131,13 @@ router.put('/edit/:id',(req,res)=>{
         };
         store.password= req.body.password;
 
+        if(req.file)
+        {
+            store.icon=req.file.buffer;
+        }else {
+            store.icon = null;
+        }
+
         let isActive = false;
         if (req.body.isActive) {
             isActive = true;
@@ -115,25 +145,31 @@ router.put('/edit/:id',(req,res)=>{
         store.isActive=isActive;
 
         store.phoneNumbers=[];
-        for(var i=0;i<req.body.phoneNumbers.length;i++)
+        if(req.body.phoneNumbers)
         {
-            let phoneInfo=req.body.phoneNumbers[i];
-            store.phoneNumbers.push({
-                main: phoneInfo.main,
-                title: phoneInfo.title,
-                phoneNumber: phoneInfo.phoneNumber
-            });
+            for(var i=0;i<req.body.phoneNumbers.length;i++)
+            {
+                let phoneInfo=req.body.phoneNumbers[i];
+                store.phoneNumbers.push({
+                    main: phoneInfo.main,
+                    title: phoneInfo.title,
+                    phoneNumber: phoneInfo.phoneNumber
+                });
+            }
         }
 
         store.emails = [];
-        for(var j=0;j<req.body.emails.length;j++)
+        if(req.body.emails)
         {
-            let emailInfo=req.body.emails[j];
-            store.emails.push({
-                main: emailInfo.main,
-                title: emailInfo.title,
-                email: emailInfo.email
-            });
+            for(var j=0;j<req.body.emails.length;j++)
+            {
+                let emailInfo=req.body.emails[j];
+                store.emails.push({
+                    main: emailInfo.main,
+                    title: emailInfo.title,
+                    email: emailInfo.email
+                });
+            }
         }
 
         store.save().then(updatedStore=>{

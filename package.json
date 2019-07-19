@@ -25,6 +25,7 @@
     "mongodb": "^3.2.7",
     "mongoose": "^5.6.0",
     "mongoose-double": "0.0.1",
+    "multer": "^1.4.2",
     "package-name": "^0.1.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
