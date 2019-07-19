@@ -8,7 +8,7 @@ const UserStoreSchema = new Schema({
             required: true
         },
     favourites:[{
-            rowNumber:{
+        rowNumber:{
                 type:Number
             },
         store: {
