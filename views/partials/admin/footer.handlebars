@@ -48,10 +48,10 @@
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Banks', 'Stores', 'Users'],
+            labels: ['Banks', 'Stores', 'Users','Invoices'],
             datasets: [{
                 label: '# of Count',
-                data: [{{bankCount}}, {{storeCount}}, {{userCount}}],
+                data: [{{bankCount}}, {{storeCount}}, {{userCount}},{{invoiceCount}}],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
