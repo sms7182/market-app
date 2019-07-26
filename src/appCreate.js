@@ -56,7 +56,8 @@ const admin = require('../routes/admin/index');
 const banks = require('../routes/admin/banks');
 const stores = require('../routes/admin/stores');
 const userInfos = require('../routes/admin/userInfos');
-const invoices = require('../routes/admin/invoices');
+const adminInvoices = require('../routes/admin/invoices');
+const defaultInvoices = require('../routes/home/invoices');
 
 //User Routes
 app.use('/', home);
@@ -64,6 +65,7 @@ app.use('/admin', admin);
 app.use('/admin/banks', banks);
 app.use('/admin/stores', stores);
 app.use('/userInfos', userInfos);
-app.use('/invoices',invoices);
+app.use('/admin/invoices',adminInvoices);
+app.use('/invoices',defaultInvoices);
 
 module.exports = app;

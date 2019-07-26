@@ -44,7 +44,7 @@ test('Should Create a new Store', async ()=>{
        ]
     });
 
-   const savedStore = Store.find({name:'Bla Bla Store'});
+   const savedStore =await Store.findOne({name:'Bla Bla Store'});
        expect(savedStore).not.toBeNull();
 
 });

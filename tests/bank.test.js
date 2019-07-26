@@ -13,7 +13,7 @@ test('Should Create a new BANK', async ()=>{
         address:'5Street - No2'
     });
 
-    const savedBank = Bank.find({name:'Zirat Bank'});
+    const savedBank = await Bank.findOne({name:'Zirat Bank'});
     expect(savedBank).not.toBeNull();
 });
 

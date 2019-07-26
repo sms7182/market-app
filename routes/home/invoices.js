@@ -3,27 +3,22 @@ const router=express.Router();
 const Invoice=require('../../models/Invoice');
 const InvoiceLine=require('../../models/InvoiceLines');
 
-router.get('/', (req, res) => {
-    Invoice.find().populate('store').populate('user').then(invoices => {
-        res.render('admin/invoices', {invoices: invoices});
-    });
-});
+router.get('/my-invoices', (req, res) => {
+    Invoice.find({user: req.user.id}).populate('store').then(invoices => {
 
-//
-// router.get('/',(req,res)=>{
-// Invoice.find({}).populate('invoiceLines').exec(function(err,obj){
-//     res.render('admin/invoices',{invoices:obj})
-//    // res.send(obj);
-// })
-// });
+        res.render('home/invoices/my-invoices', {invoices: invoices});
+    })
+});
 
 router.get('/create', (req, res) => {
     //res.send('It works...');
    
-    res.render('admin/invoices/create');
+    res.render('home/invoices/create');
     
 });
+
 router.post('/create', (req, res) => {
+    console.log('Create INvoice');
    if(req&&req.body){
     var netPrice=req.body.netPrice;
     var incPrice=0;
@@ -64,7 +59,7 @@ router.post('/create', (req, res) => {
                    res.send('Error in line saving: '+err);
                }
                else{
-                res.render('admin/invoices/edit',{invoice:invoice});
+                res.render('home/invoices/edit',{invoice:invoice});
                }
     });
    }

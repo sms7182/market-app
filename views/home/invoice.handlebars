@@ -1,12 +1,11 @@
 <h1>
-    ALL Invoices
+    My Invoices
 </h1>
 
 <table class="table table-bordered">
     <thead>
     <tr>
         <th>Code</th>
-        <th>User</th>
         <th>Store</th>
         <th>status</th>
         <th>netPrice</th>
@@ -21,7 +20,6 @@
     {{#each invoices}}
         <tr>
             <td><a href="/home/invoices/edit/{{id}}">{{code}}</a></td>
-            <td>{{user.firstName}} {{user.lastName}}</td>
             <td>{{store.name}}</td>
             <td>{{status}}</td>
             <td>{{netPrice}}</td>
