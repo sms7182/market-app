@@ -42,9 +42,9 @@ test('Should Create a new Store', async ()=>{
                email:'BlaBlaService@example.com'
            }
        ]
-    }).expect(201);
+    });
 
-   const savedStore = Store.findById(response.body._id);
+   const savedStore = Store.find({name:'Bla Bla Store'});
        expect(savedStore).not.toBeNull();
 
 });
@@ -64,10 +64,8 @@ test('Should Remove an existing Store', async ()=>{
     await storeOne.save();
 
     await request(app).delete(`/admin/stores/${storeId}`)
-        .send()
-        .expect(201);
+        .send();
 
     const checkStore = await Store.findById(storeId);
-
     expect(checkStore).toBeNull();
 });

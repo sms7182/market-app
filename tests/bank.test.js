@@ -9,9 +9,12 @@ beforeEach(async ()=>{
 
 test('Should Create a new BANK', async ()=>{
    let result = await request(app).post('/admin/banks/create').send({
-       // name:'Zirat Bank',
+        name:'Zirat Bank',
         address:'5Street - No2'
-    }).expect(201);
+    });
+
+    const savedBank = Bank.find({name:'Zirat Bank'});
+    expect(savedBank).not.toBeNull();
 });
 
 test('Should Remove an existing BANK', async ()=>{
@@ -24,10 +27,8 @@ test('Should Remove an existing BANK', async ()=>{
     await bankOne.save();
 
    await request(app).delete(`/admin/banks/${bankId}`)
-       .send()
-       .expect(201);
+       .send();
 
     const checkBank = await Bank.findById(bankId);
-
     expect(checkBank).toBeNull();
 });

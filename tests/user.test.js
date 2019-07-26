@@ -1,6 +1,7 @@
 const request = require('supertest');
 const app = require('../src/appCreate');
 const User = require('../models/UserInfo');
+const UserStore = require('../models/UserStore');
 const Store = require('../models/Store');
 const Bank = require('../models/Bank');
 
@@ -17,7 +18,9 @@ test('Should signup a new User',async ()=>{
         email:'andrew@example.com',
         password:'MyPass123',
         passwordConfirm:'MyPass123'
-    }).expect(201);
+    });
+    const savedUser = User.find({email:'andrew@example.com'});
+    expect(savedUser).not.toBeNull();
 });
 
 
@@ -38,7 +41,7 @@ test('Should Add a new Store as Favourite', async ()=>{
     });
     await storeOne.save();
 
-    let userOne = new UserInfo({
+    let userOne = new User({
         firstName:'Andrew',
         lastName: 'Mallow',
         nationalityCode:'123456789',
@@ -54,25 +57,10 @@ test('Should Add a new Store as Favourite', async ()=>{
         favourites:[{
             rowNumber:1,
             store:storeOne
-        },{
-            main:false,
-            title:'Customer Service',
-            phoneNumber:'654321'
-        }],
-        emails:[
-            {
-                main:true,
-                title:'Office',
-                email:'BlaBlaStore@example.com'
-            },{
-                main:false,
-                title:'Customer Service',
-                email:'BlaBlaService@example.com'
-            }
-        ]
-    }).expect(201);
+        }]
+    });
 
-    const savedStore = Store.findById(response.body._id);
+    const savedStore = UserStore.find({user:userOne,store:storeOne});
     expect(savedStore).not.toBeNull();
 
 });
