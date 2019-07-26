@@ -1,27 +1,27 @@
-<h1>create invoice</h1>
+<h1>Add Item</h1>
 {{#each errors}}
     <div class="alert alert-danger">
     {{message}}
     </div>
 {{/each}}
 
-<form action="/admin" method="post">
-    
+<form action="create" method="post">
+
    <div class="form-group">
         <label for="item">Item</label>
         <input name="item" type="text" class="form-control" placeholder="Enter Item" required>
     </div>
    <div class="form-group">
         <label for="netPrice">UnitPrice</label>
-        <input name="netPrice" type="number" class="form-control" placeholder="Enter UnitPrice" required>
+        <input name="netPrice" type="number" step=any class="form-control" placeholder="Enter UnitPrice" required>
     </div>
     <div class="form-group">
         <label for="decPrice">DecPrice</label>
-        <input name="decPrice" type="number" class="form-control" placeholder="DecPrice" disabled >
+        <input name="decPrice" type="number" step=any class="form-control" placeholder="DecPrice" disabled >
     </div>
     <div class="form-group">
         <label for="incPrice">IncPrice</label>
-        <input name="incPrice" type="number" class="form-control" placeholder="IncPrice" disabled >
+        <input name="incPrice" type="number" step=any class="form-control" placeholder="IncPrice" disabled >
     </div>
     <div class="form-group">
         <label for="totalPrice">TotalPrice</label>
@@ -29,3 +29,27 @@
     </div>
       <button class="btn-primary">Add Item</button>
 </form>
+<h1>All Items</h1>
+<table class="table table-bordered">
+    <thead> 
+        <tr>
+            <th>Item</th>
+            <th>UnitPrice</th>
+            <th>IncPrice</th>
+            <th>DecPrice</th>
+            <th>TotalPrice</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each invoice.invoceLines}}
+        <tr>
+            <td>{{item}}</td>
+            <td>{{netPrice}}</td>
+            <td>{{incPrice}}</td>
+            <td>{{decPrice}}</td>
+            <td>{{totalPrice}}</td>
+            <td>
+       </tr>
+        {{/each}}
+    </tbody>
+</table>
