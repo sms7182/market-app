@@ -38,7 +38,7 @@
     "body-parser": "latest",
     "env-cmd": "^9.0.3",
     "jest": "^23.6.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "mongoose-url-slugs": "^1.0.2",
     "supertest": "^4.0.2"
   },
